@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Dialog,
@@ -12,6 +12,8 @@ import {
   TextField
 } from '@mui/material';
 import isEqual from 'lodash/isEqual';
+import { v4 as uuidv4 } from 'uuid';
+
 import { Action, BudgetItem, Currency } from '../types';
 
 import { currencies } from '../utils';
@@ -31,24 +33,17 @@ const LocalFormControl = styled(FormControl)`
 const LocalDialogTitle = styled(DialogTitle)`
   text-transform: capitalize;
 `;
-/**
- *
- * @param param0
- * @returns
- */
-export const BudgetEntryDialog = ({
-  open,
-  onClose,
-  item,
-  onChange
-}: BudgetEntryDialogProps) => {
-  const [currency, setCurrency] = useState<Currency['type'] | undefined>(
-    item?.currency
-  );
+
+export const BudgetEntryDialog = ({ open, onClose, item, onChange }: BudgetEntryDialogProps) => {
+  const [currency, setCurrency] = useState<Currency['type'] | undefined>(item?.currency);
   const [amount, setAmount] = useState<number | undefined>(item?.amount);
-  const [description, setDescription] = useState<string | undefined>(
-    item?.description
-  );
+  const [description, setDescription] = useState<string | undefined>(item?.description);
+
+  useEffect(() => {
+    setCurrency(item?.currency);
+    setAmount(item?.amount);
+    setDescription(item?.description);
+  }, [item]);
 
   const entry = useMemo(() => {
     if (!!currency && !!amount && !!description) {
@@ -120,7 +115,7 @@ export const BudgetEntryDialog = ({
           disabled={!entry || isEqual(entry, item)}
           onClick={() => {
             if (!!entry && onChange) {
-              onChange(entry, action);
+              onChange({ ...entry, id: item?.id ?? uuidv4() }, action);
               onClose();
             }
           }}
