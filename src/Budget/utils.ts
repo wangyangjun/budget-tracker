@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Currency } from './types';
+import { BudgetItem, Currency } from './types';
 
 export const currencies: ReadonlyArray<Currency> = [
   {
@@ -12,7 +12,7 @@ export const currencies: ReadonlyArray<Currency> = [
   }
 ];
 
-export const budgetList = [
+export const budgetList: BudgetItem[] = [
   {
     id: uuidv4(),
     currency: 'euro',

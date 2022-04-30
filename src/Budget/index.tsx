@@ -1,21 +1,36 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Action, BudgetItem } from './types';
-import { Button, Grid } from '@mui/material';
-import { budgetList } from './utils';
+import { Button, Grid, Typography } from '@mui/material';
+// import { budgetList } from './utils';
 import { BudgetSummary } from './BudgetSummary';
 import { BudgetTable } from './BudgetTable';
 import { BudgetEntryDialog } from './BudgetEntryDialog';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import useAsync, { LoadingState } from '../hooks/useAsync';
+import { addBudget, getAllBudget, removeBudget, updateBudget } from './budget-client';
 
 export const BudgetPage = () => {
   const [openBudgetDialog, setOpenBudgetDialog] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [selectBudget, setSelectBudget] = useState<BudgetItem | undefined>(undefined);
 
-  const onChange = (item: BudgetItem, action: Action) => {
+  const { state: asyncState, execute } = useAsync();
+
+  useEffect(() => {
+    execute(getAllBudget);
+  }, [execute]);
+
+  const executeBudgetChange = (item: BudgetItem, action: Action) => {
     setSelectBudget(undefined);
-    console.log(item);
-    console.log(action);
+    if (action === 'create') {
+      execute(async () => addBudget(item));
+    } else {
+      execute(async () => updateBudget(item));
+    }
+  };
+
+  const executeBudgetDelete = (item: BudgetItem) => {
+    execute(async () => removeBudget(item));
   };
 
   const onDelete = (item: BudgetItem) => {
@@ -32,6 +47,17 @@ export const BudgetPage = () => {
     setSelectBudget(undefined);
     setOpenBudgetDialog(true);
   };
+
+  if (asyncState.isLoading || asyncState.loadingState === LoadingState.LOADING) {
+    return <Typography>Loading ...</Typography>;
+  }
+  if (asyncState.loadingState === LoadingState.ERROR) {
+    return <Typography>Error ...</Typography>;
+  }
+  if (asyncState.loadingState === LoadingState.IDLE) {
+    return <Typography>Initial page</Typography>;
+  }
+  const budgetList = asyncState.data;
 
   return (
     <>
@@ -53,14 +79,14 @@ export const BudgetPage = () => {
       <BudgetEntryDialog
         open={openBudgetDialog}
         onClose={() => setOpenBudgetDialog(false)}
-        onChange={onChange}
+        onChange={executeBudgetChange}
         item={selectBudget}
       />
       <ConfirmDialog
         open={openConfirmDialog}
         onClose={() => setOpenConfirmDialog(false)}
         onConfirm={() => {
-          console.log(`Delete budget: ${selectBudget?.id}`);
+          selectBudget && executeBudgetDelete(selectBudget);
         }}
         title="Delete Budget"
         message="Are you sure to delete this budget item?"
