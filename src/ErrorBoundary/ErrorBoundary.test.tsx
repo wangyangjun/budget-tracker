@@ -8,6 +8,7 @@ const ComponentWithoutError = () => <div>Children rendered</div>;
 const ComponentWithError = () => {
   throw new Error('Error message');
 
+  // eslint-disable-next-line no-unreachable
   return <div>Children not rendered</div>;
 };
 
