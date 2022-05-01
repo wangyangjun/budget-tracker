@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Action, BudgetItem } from './types';
 import { Button, Grid, Typography } from '@mui/material';
-// import { budgetList } from './utils';
 import { BudgetSummary } from './BudgetSummary';
 import { BudgetTable } from './BudgetTable';
 import { BudgetEntryDialog } from './BudgetEntryDialog';
@@ -65,7 +64,7 @@ export const BudgetPage = () => {
         <Grid item xs={8}>
           <BudgetSummary budgetList={budgetList} />
         </Grid>
-        <Grid xs={4}>
+        <Grid item xs={4}>
           <Grid container direction="row" justifyContent="flex-end">
             <Button variant="outlined" onClick={onCreate}>
               Create

@@ -1,8 +1,10 @@
 import React from 'react';
+
 import logo from './logo.svg';
 import './App.css';
 import { ErrorBoundary } from './ErrorBoundary';
 import { BudgetPage } from './Budget';
+import { Link } from '@mui/material';
 
 function App() {
   return (
@@ -17,6 +19,11 @@ function App() {
           </ErrorBoundary>
         </div>
       </div>
+      <footer>
+        <Link href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
+          Learn React
+        </Link>
+      </footer>
     </div>
   );
 }

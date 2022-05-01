@@ -13,11 +13,11 @@ import {
 } from '@mui/material';
 import isEqual from 'lodash/isEqual';
 import { v4 as uuidv4 } from 'uuid';
+import styled from '@emotion/styled';
 
 import { Action, BudgetItem, Currency } from '../types';
 
 import { currencies } from '../utils';
-import styled from '@emotion/styled';
 
 interface BudgetEntryDialogProps {
   open: boolean;
@@ -79,15 +79,14 @@ export const BudgetEntryDialog = ({ open, onClose, item, onChange }: BudgetEntry
               label="amount"
               type="number"
               required
+              error={!!amount && amount < 0}
+              helperText={!!amount && amount < 0 ? 'amount cannot be less than 0' : undefined}
               size="small"
               InputLabelProps={{
                 shrink: true
               }}
-              value={amount}
-              onChange={event => {
-                const number = Number(event.target.value);
-                if (number >= 0) setAmount(number);
-              }}
+              value={amount ?? ''}
+              onChange={event => setAmount(Number(event.target.value))}
             />
           </FormControl>
         </div>
