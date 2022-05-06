@@ -1,35 +1,37 @@
-import { useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Action, BudgetItem } from './types';
 import { Button, Grid, Typography } from '@mui/material';
 import { BudgetSummary } from './BudgetSummary';
 import { BudgetTable } from './BudgetTable';
 import { BudgetEntryDialog } from './BudgetEntryDialog';
 import { ConfirmDialog } from '../components/ConfirmDialog';
-import useAsync, { LoadingState } from '../hooks/useAsync';
-import { addBudget, getAllBudget, removeBudget, updateBudget } from './budget-client';
+import { LoadingState } from '../hooks/useAsync';
+
+import { BudgetContext } from './Budget.context';
 
 export const BudgetPage = () => {
   const [openBudgetDialog, setOpenBudgetDialog] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [selectBudget, setSelectBudget] = useState<BudgetItem | undefined>(undefined);
 
-  const { state: asyncState, execute } = useAsync();
-
-  useEffect(() => {
-    execute(getAllBudget);
-  }, [execute]);
+  const {
+    budgetState: asyncState,
+    addBudget,
+    updateBudget,
+    removeBudget
+  } = useContext(BudgetContext);
 
   const executeBudgetChange = (item: BudgetItem, action: Action) => {
     setSelectBudget(undefined);
     if (action === 'create') {
-      execute(async () => addBudget(item));
+      addBudget(item);
     } else {
-      execute(async () => updateBudget(item));
+      updateBudget(item);
     }
   };
 
   const executeBudgetDelete = (item: BudgetItem) => {
-    execute(async () => removeBudget(item));
+    removeBudget(item);
   };
 
   const onDelete = (item: BudgetItem) => {

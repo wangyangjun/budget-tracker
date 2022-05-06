@@ -5,6 +5,7 @@ import './App.css';
 import { ErrorBoundary } from './ErrorBoundary';
 import { BudgetPage } from './Budget';
 import { Link } from '@mui/material';
+import { BudgetProvider } from './Budget/Budget.context';
 
 function App() {
   return (
@@ -15,7 +16,9 @@ function App() {
       <div className="App-body">
         <div className="budget-container">
           <ErrorBoundary>
-            <BudgetPage />
+            <BudgetProvider>
+              <BudgetPage />
+            </BudgetProvider>
           </ErrorBoundary>
         </div>
       </div>

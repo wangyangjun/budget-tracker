@@ -20,14 +20,14 @@ type Action = {
   payload: any;
 };
 
-type State = {
+export type State = {
   loadingState: LoadingState;
   isLoading: boolean;
   data: any;
   error: Error | null;
 };
 
-const defaultState: State = {
+export const DEFAULT_ASYNC_STATE: State = {
   loadingState: LoadingState.IDLE,
   isLoading: false,
   data: null,
@@ -35,12 +35,12 @@ const defaultState: State = {
 };
 
 /**
- * @returns {typeof defaultState}
+ * @returns {typeof DEFAULT_ASYNC_STATE}
  */
 function reducer(state: State, action: Action) {
   switch (action.type) {
     case ActionType.RESET:
-      return defaultState;
+      return DEFAULT_ASYNC_STATE;
     case ActionType.BEGIN:
       return {
         loadingState: LoadingState.LOADING,
@@ -86,7 +86,7 @@ function reducer(state: State, action: Action) {
  * @returns {[ReturnType<typeof reducer>, (fn: () => Promise<any>, options?: { clearData: boolean, keepOnError: boolean }) => Promise<void>]}
  */
 function useAsync() {
-  const [state, dispatch] = useReducer(reducer, defaultState);
+  const [state, dispatch] = useReducer(reducer, DEFAULT_ASYNC_STATE);
 
   const execute = useCallback(
     async (fn: () => Promise<any>, { clearData = false, keepOnError = false } = {}) => {
