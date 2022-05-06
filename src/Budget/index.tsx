@@ -30,10 +30,6 @@ export const BudgetPage = () => {
     }
   };
 
-  const executeBudgetDelete = (item: BudgetItem) => {
-    removeBudget(item);
-  };
-
   const onDelete = (item: BudgetItem) => {
     setSelectBudget(item);
     setOpenConfirmDialog(true);
@@ -87,7 +83,7 @@ export const BudgetPage = () => {
         open={openConfirmDialog}
         onClose={() => setOpenConfirmDialog(false)}
         onConfirm={() => {
-          selectBudget && executeBudgetDelete(selectBudget);
+          selectBudget && removeBudget(selectBudget);
         }}
         title="Delete Budget"
         message="Are you sure to delete this budget item?"

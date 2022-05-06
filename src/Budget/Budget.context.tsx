@@ -9,7 +9,7 @@ function useBudgets() {
 
   useEffect(() => {
     execute(getAllBudget);
-  }, []);
+  }, [execute]);
 
   return {
     budgetState,
